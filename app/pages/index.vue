@@ -4,6 +4,13 @@ import { onMounted, onUnmounted, ref } from 'vue'
 const vantaContainer = ref(null)
 let vantaEffect = null
 
+// Hamburger Menu
+const isMenuOpen = ref(false)
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+}
+
 // Load external script
 const loadScript = (src) => {
   return new Promise((resolve, reject) => {
@@ -49,6 +56,31 @@ onMounted(async () => {
 onUnmounted(() => {
   if (vantaEffect) vantaEffect.destroy()
 })
+
+const url = useRequestURL()
+
+
+const title = 'Home | Gian Jalandoni'
+const description =
+  'Certifications earned by Gian Jalandoni: Word Associate, PowerPoint Associate'
+
+
+useHead({
+  title,
+  link: [{ rel: 'canonical', href: url.href }],
+})
+
+
+useSeoMeta({
+  description,
+  ogTitle: title,
+  ogDescription: description,
+  ogType: 'website',
+  ogUrl: url.href,
+  ogImage: `${url.origin}/images/profile.jpg`, 
+  ogImageAlt: 'Gian Jalandoni Personal Portfolio',
+})
+
 </script>
 
 <template>
@@ -58,13 +90,45 @@ onUnmounted(() => {
 
     <!-- Main Navigation Header -->
     <header id="Navigator">
-      <router-link to="/" class="logo">GCJ</router-link>
-      <nav id="Nav">
-        <router-link to="/about">About</router-link>
-        <router-link to="/certificates">Certificates</router-link>
-        <router-link to="/tech-stack">Tech Stack</router-link>
-      </nav>
-    </header>
+
+  <!-- Logo -->
+  <router-link to="/" class="logo">GCJ</router-link>
+
+  <!-- Desktop Navigation -->
+  <nav id="Nav" class="desktop-nav">
+    <router-link to="/about">About</router-link>
+    <router-link to="/certificates">Certifications</router-link>
+    <router-link to="/tech-stack">Tech Stack</router-link>
+  </nav>
+
+  <!-- Hamburger Button -->
+  <button
+    class="hamburger"
+    @click="toggleMenu"
+    :aria-expanded="isMenuOpen"
+    aria-label="Toggle navigation"
+  >
+    <span v-if="!isMenuOpen">☰</span>
+    <span v-else>✕</span>
+  </button>
+
+  <!-- Mobile Navigation -->
+  <nav v-if="isMenuOpen" class="mobile-nav">
+
+    <router-link to="/about" @click="isMenuOpen = false">
+      About
+    </router-link>
+
+    <router-link to="/certificates" @click="isMenuOpen = false">
+      Certifications
+    </router-link>
+
+    <router-link to="/tech-stack" @click="isMenuOpen = false">
+      Tech Stack
+    </router-link>
+  </nav>
+
+</header>
 
     <!-- Main Profile Section -->
     <section class="main-page">

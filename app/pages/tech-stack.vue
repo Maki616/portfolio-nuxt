@@ -4,6 +4,13 @@ import { onMounted, onUnmounted, ref } from 'vue'
 const vantaContainer = ref(null)
 let vantaEffect = null
 
+// Hamburger Menu
+const isMenuOpen = ref(false)
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+}
+
 // Load external script
 const loadScript = (src) => {
   return new Promise((resolve, reject) => {
@@ -88,20 +95,79 @@ const technologies = [
     image: '/images/vscode.webp'
   }
 ]
+
+const url = useRequestURL()
+
+
+const title = 'Tech Stack | Gian Jalandoni'
+const description =
+  'Tech Stack used by Gian Jalandoni in his projects and development work.'
+
+
+useHead({
+  title,
+  link: [{ rel: 'canonical', href: url.href }],
+})
+
+
+useSeoMeta({
+  description,
+  ogTitle: title,
+  ogDescription: description,
+  ogType: 'website',
+  ogUrl: url.href,
+})
+
+
 </script>
 
 <template>
   <div>
     <div id="background" ref="vantaContainer"></div>
 
-    <header id="Navigator">
-      <NuxtLink to="/" class="logo">GCJ</NuxtLink>
-      <nav id="Nav">
-        <NuxtLink to="/about">About</NuxtLink>
-        <NuxtLink to="/certificates">Certificates</NuxtLink>
-        <NuxtLink to="/tech-stack">Tech Stack</NuxtLink>
-      </nav>
-    </header>
+    
+<header id="Navigator">
+
+  <!-- Logo -->
+  <NuxtLink to="/" class="logo">GCJ</NuxtLink>
+
+  <!-- Desktop Navigation -->
+  <nav id="Nav">
+    <NuxtLink to="/about">About</NuxtLink>
+    <NuxtLink to="/certificates">Certifications</NuxtLink>
+    <NuxtLink to="/tech-stack">Tech Stack</NuxtLink>
+  </nav>
+
+  <!-- Hamburger Button -->
+  <button
+    class="hamburger"
+    @click="toggleMenu"
+    :aria-expanded="isMenuOpen"
+    aria-label="Toggle navigation"
+  >
+    <span v-if="!isMenuOpen">☰</span>
+    <span v-else>✕</span>
+  </button>
+
+  <!-- Mobile Navigation -->
+  <nav v-if="isMenuOpen" class="mobile-nav">
+
+    <NuxtLink to="/about" @click="isMenuOpen = false">
+      About
+    </NuxtLink>
+
+    <NuxtLink to="/certificates" @click="isMenuOpen = false">
+      Certifications
+    </NuxtLink>
+
+    <NuxtLink to="/tech-stack" @click="isMenuOpen = false">
+      Tech Stack
+    </NuxtLink>
+
+  </nav>
+
+</header>
+
 
     <section class="techstack">
 
