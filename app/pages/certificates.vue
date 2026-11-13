@@ -67,7 +67,7 @@ useSeoMeta({
           <template #media>
             <button
               type="button"
-              class="btn btn-ghost h-48 min-h-0 w-full rounded-none p-0"
+              class="btn btn-ghost h-[210px] min-h-0 w-full rounded-none p-0"
               :aria-label="`Preview ${certificate.title} certificate`"
               @click="openModal(certificate.image)"
             >
@@ -84,7 +84,7 @@ useSeoMeta({
               href="https://www.certiport.com/portal/pages/credentialverification.aspx"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn btn-outline btn-sm"
+              class="btn btn-outline"
             >
               Verify Certification
             </a>

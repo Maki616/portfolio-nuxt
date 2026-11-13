@@ -58,7 +58,7 @@ const links = [
 
         <ul
           v-if="isMenuOpen"
-          class="menu dropdown-content mobile-menu-panel z-20 items-center rounded-box border border-base-content/15 bg-base-200 p-2 text-center shadow-xl"
+          class="menu dropdown-content mobile-menu-panel z-20 items-center rounded-box border border-base-content/15 bg-base-200 p-3 text-center shadow-xl"
         >
           <li v-for="link in links" :key="link.to">
             <NuxtLink :to="link.to" @click="isMenuOpen = false">

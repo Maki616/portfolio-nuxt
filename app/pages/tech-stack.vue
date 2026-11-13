@@ -81,7 +81,7 @@ useSeoMeta({
             <img
               :src="technology.image"
               :alt="technology.name"
-              class="mt-6 h-16 w-16 object-contain"
+              class="mb-3 h-16 w-16 object-contain"
             >
           </template>
         </PortfolioCard>
