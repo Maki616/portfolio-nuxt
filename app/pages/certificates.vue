@@ -1,17 +1,8 @@
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { ref } from 'vue'
 
-const vantaContainer = ref(null)
-let vantaEffect = null
 const selectedImage = ref(null)
-
-// Hamburger Menu
-const isMenuOpen = ref(false)
-
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
-}
 
 const certificates = [
   {
@@ -34,62 +25,16 @@ function closeModal() {
   selectedImage.value = null
 }
 
-const loadScript = (src) => {
-  return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) {
-      resolve()
-      return
-    }
-    const script = document.createElement('script')
-    script.src = src
-    script.onload = resolve
-    script.onerror = reject
-    document.head.appendChild(script)
-  })
-}
-
-onMounted(async () => {
-  try {
-    await loadScript('https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js')
-    await loadScript('https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js')
-
-    if (window.VANTA && vantaContainer.value) {
-      vantaEffect = window.VANTA.NET({
-        el: vantaContainer.value,
-        color: '#FFFFFF',
-        backgroundColor: '#000000',
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00
-      })
-    }
-  } catch (error) {
-    console.error('Failed to load Vanta background scripts:', error)
-  }
-})
-
-onUnmounted(() => {
-  if (vantaEffect) vantaEffect.destroy()
-})
-
 const url = useRequestURL()
-
-
 const title = 'Certifications | Gian Jalandoni'
 const description =
   'Certifications earned by Gian Jalandoni: Word Associate, PowerPoint Associate'
 const image = `${url.origin}/images/PPTCert.jpg`
 
-
 useHead({
   title,
   link: [{ rel: 'canonical', href: url.href }],
 })
-
 
 useSeoMeta({
   description,
@@ -98,102 +43,87 @@ useSeoMeta({
   ogType: 'website',
   ogUrl: url.href,
   ogImage: image,
-  ogImageAlt: 'Microsoft Office Specialist Word Associate badge',
-
+  ogImageAlt: 'Microsoft Office Specialist PowerPoint Associate certificate',
 })
-
-
 </script>
 
 <template>
-  <div>
-    <div id="background" ref="vantaContainer"></div>
-
-   
-<header id="Navigator">
-
-  <!-- Logo -->
-  <NuxtLink to="/" class="logo">GCJ</NuxtLink>
-
-  <!-- Desktop Navigation -->
-  <nav id="Nav">
-    <NuxtLink to="/about">About</NuxtLink>
-    <NuxtLink to="/certificates">Certifications</NuxtLink>
-    <NuxtLink to="/tech-stack">Tech Stack</NuxtLink>
-  </nav>
-
-  <!-- Hamburger Button -->
-  <button
-    class="hamburger"
-    @click="toggleMenu"
-    :aria-expanded="isMenuOpen"
-    aria-label="Toggle navigation"
-  >
-    <span v-if="!isMenuOpen">☰</span>
-    <span v-else>✕</span>
-  </button>
-
-  <!-- Mobile Navigation -->
-  <nav v-if="isMenuOpen" class="mobile-nav">
-
-    <NuxtLink to="/about" @click="isMenuOpen = false">
-      About
-    </NuxtLink>
-
-    <NuxtLink to="/certificates" @click="isMenuOpen = false">
-      Certifications
-    </NuxtLink>
-
-    <NuxtLink to="/tech-stack" @click="isMenuOpen = false">
-      Tech Stack
-    </NuxtLink>
-
-  </nav>
-
-</header>
-
+  <div data-theme="black">
+    <PageBackground />
+    <AppNavbar />
 
     <section class="certifications">
       <h2>Certifications</h2>
 
       <div class="cert-grid">
-        <div
+        <PortfolioCard
           v-for="certificate in certificates"
           :key="certificate.title"
+          :title="certificate.title"
+          title-tag="h3"
           class="cert-card"
+          body-class="items-center gap-4 text-center"
         >
-          <img
-            :src="certificate.image"
-            :alt="certificate.alt"
-            class="cert-image"
-            @click="openModal(certificate.image)"
-          >
+          <template #media>
+            <button
+              type="button"
+              class="btn btn-ghost h-48 min-h-0 w-full rounded-none p-0"
+              :aria-label="`Preview ${certificate.title} certificate`"
+              @click="openModal(certificate.image)"
+            >
+              <img
+                :src="certificate.image"
+                :alt="certificate.alt"
+                class="h-full w-full object-contain p-3"
+              >
+            </button>
+          </template>
 
-          <p class="cert-title">{{ certificate.title }}</p>
-
-          <a
-            href="https://www.certiport.com/portal/pages/credentialverification.aspx"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="cert-verify"
-          >
-            Verify Certification
-          </a>
-        </div>
+          <div class="card-actions justify-center">
+            <a
+              href="https://www.certiport.com/portal/pages/credentialverification.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline btn-sm"
+            >
+              Verify Certification
+            </a>
+          </div>
+        </PortfolioCard>
       </div>
     </section>
 
     <div
       v-if="selectedImage"
-      id="imageModal"
-      @click="closeModal"
+      class="modal modal-open"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Certificate preview"
+      @click.self="closeModal"
+      @keyup.esc="closeModal"
+      tabindex="-1"
     >
-      <img
-        :src="selectedImage"
-        id="modalImg"
-        alt="Certificate Preview"
-        @click.stop
-      >
+      <div class="modal-box max-w-5xl p-4">
+        <button
+          type="button"
+          class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2"
+          aria-label="Close certificate preview"
+          @click="closeModal"
+        >
+          ✕
+        </button>
+        <img
+          :src="selectedImage"
+          alt="Certificate preview"
+          class="mx-auto max-h-[80vh] max-w-full object-contain"
+        >
+      </div>
+      <button
+        type="button"
+        class="modal-backdrop"
+        aria-label="Close certificate preview"
+        @click="closeModal"
+      ></button>
     </div>
   </div>
 </template>

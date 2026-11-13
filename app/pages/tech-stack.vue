@@ -1,62 +1,4 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
-
-const vantaContainer = ref(null)
-let vantaEffect = null
-
-// Hamburger Menu
-const isMenuOpen = ref(false)
-
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
-}
-
-// Load external script
-const loadScript = (src) => {
-  return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) {
-      resolve()
-      return
-    }
-    const script = document.createElement('script')
-    script.src = src
-    script.onload = resolve
-    script.onerror = reject
-    document.head.appendChild(script)
-  })
-}
-
-onMounted(async () => {
-  try {
-    await loadScript('https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js')
-    await loadScript('https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js')
-
-    // Vanta background effect
-    if (window.VANTA && vantaContainer.value) {
-      vantaEffect = window.VANTA.NET({
-        el: vantaContainer.value,
-        color: '#FFFFFF',
-        backgroundColor: '#000000',
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00
-      })
-    }
-  } catch (error) {
-    console.error('Failed to load Vanta background scripts:', error)
-  }
-})
-
-
-onUnmounted(() => {
-  if (vantaEffect) vantaEffect.destroy()
-})
-
-
 const technologies = [
   {
     name: 'Java',
@@ -97,19 +39,15 @@ const technologies = [
 ]
 
 const url = useRequestURL()
-
-
 const title = 'Tech Stack | Gian Jalandoni'
 const description =
   'Tech Stack used by Gian Jalandoni in his projects and development work.'
 const image = `${url.origin}/images/profile.jpg`
 
-
 useHead({
   title,
   link: [{ rel: 'canonical', href: url.href }],
 })
-
 
 useSeoMeta({
   description,
@@ -119,81 +57,35 @@ useSeoMeta({
   ogUrl: url.href,
   ogImage: image,
   ogImageAlt: 'Gian Jalandoni Personal Portfolio',
-  
 })
-
-
 </script>
 
 <template>
-  <div>
-    <div id="background" ref="vantaContainer"></div>
-
-    
-<header id="Navigator">
-
-  <!-- Logo -->
-  <NuxtLink to="/" class="logo">GCJ</NuxtLink>
-
-  <!-- Desktop Navigation -->
-  <nav id="Nav">
-    <NuxtLink to="/about">About</NuxtLink>
-    <NuxtLink to="/certificates">Certifications</NuxtLink>
-    <NuxtLink to="/tech-stack">Tech Stack</NuxtLink>
-  </nav>
-
-  <!-- Hamburger Button -->
-  <button
-    class="hamburger"
-    @click="toggleMenu"
-    :aria-expanded="isMenuOpen"
-    aria-label="Toggle navigation"
-  >
-    <span v-if="!isMenuOpen">☰</span>
-    <span v-else>✕</span>
-  </button>
-
-  <!-- Mobile Navigation -->
-  <nav v-if="isMenuOpen" class="mobile-nav">
-
-    <NuxtLink to="/about" @click="isMenuOpen = false">
-      About
-    </NuxtLink>
-
-    <NuxtLink to="/certificates" @click="isMenuOpen = false">
-      Certifications
-    </NuxtLink>
-
-    <NuxtLink to="/tech-stack" @click="isMenuOpen = false">
-      Tech Stack
-    </NuxtLink>
-
-  </nav>
-
-</header>
-
+  <div data-theme="black">
+    <PageBackground />
+    <AppNavbar />
 
     <section class="techstack">
-
       <h2>Tech Stack</h2>
 
       <div class="tech-container">
-
-        <div
+        <PortfolioCard
           v-for="technology in technologies"
           :key="technology.name"
+          :title="technology.name"
+          title-tag="h3"
           class="tech-card"
+          body-class="items-center text-center"
         >
-          <img
-            :src="technology.image"
-            :alt="technology.name"
-          >
-
-          <p>{{ technology.name }}</p>
-        </div>
-
+          <template #media>
+            <img
+              :src="technology.image"
+              :alt="technology.name"
+              class="mt-6 h-16 w-16 object-contain"
+            >
+          </template>
+        </PortfolioCard>
       </div>
-
     </section>
   </div>
 </template>
