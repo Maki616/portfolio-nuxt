@@ -63,6 +63,7 @@ const url = useRequestURL()
 const title = 'Home | Gian Jalandoni'
 const description =
   'Certifications earned by Gian Jalandoni: Word Associate, PowerPoint Associate'
+const image = `${url.origin}/images/profile.jpg`
 
 
 useHead({
@@ -77,8 +78,9 @@ useSeoMeta({
   ogDescription: description,
   ogType: 'website',
   ogUrl: url.href,
-  ogImage: `${url.origin}/images/profile.jpg`, 
+  ogImage: image,
   ogImageAlt: 'Gian Jalandoni Personal Portfolio',
+  
 })
 
 </script>

@@ -102,6 +102,7 @@ const url = useRequestURL()
 const title = 'Tech Stack | Gian Jalandoni'
 const description =
   'Tech Stack used by Gian Jalandoni in his projects and development work.'
+const image = `${url.origin}/images/profile.jpg`
 
 
 useHead({
@@ -116,6 +117,9 @@ useSeoMeta({
   ogDescription: description,
   ogType: 'website',
   ogUrl: url.href,
+  ogImage: image,
+  ogImageAlt: 'Gian Jalandoni Personal Portfolio',
+  
 })
 
 

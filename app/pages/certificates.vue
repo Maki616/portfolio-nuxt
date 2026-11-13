@@ -82,6 +82,7 @@ const url = useRequestURL()
 const title = 'Certifications | Gian Jalandoni'
 const description =
   'Certifications earned by Gian Jalandoni: Word Associate, PowerPoint Associate'
+const image = `${url.origin}/images/PPTCert.jpg`
 
 
 useHead({
@@ -96,8 +97,9 @@ useSeoMeta({
   ogDescription: description,
   ogType: 'website',
   ogUrl: url.href,
-  ogImage: `${url.origin}/img/powerpoint.jpg`, 
+  ogImage: image,
   ogImageAlt: 'Microsoft Office Specialist Word Associate badge',
+
 })
 
 
